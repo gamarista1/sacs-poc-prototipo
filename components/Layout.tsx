@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { UserRole } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { IconDashboard, IconPatients, IconTelemed, IconLab, IconAudit } from './Icons';
+import { IconDashboard, IconPatients, IconTelemed, IconLab, IconAudit, IconPresentation } from './Icons';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -36,12 +36,26 @@ const Layout: React.FC<LayoutProps> = ({ children, role, userName, centerName })
   };
 
   const menuItems = [
-    { label: 'Dashboard', path: '/', icon: <IconDashboard />, roles: [UserRole.SUPER_ADMIN, UserRole.CENTER_ADMIN] },
+    { label: 'Dashboard', path: '/doctor/analytics', icon: <IconDashboard />, roles: [UserRole.SUPER_ADMIN, UserRole.CENTER_ADMIN] },
     { label: 'Agenda Médica', path: '/doctor', icon: <IconPatients />, roles: [UserRole.DOCTOR, UserRole.SUPER_ADMIN] },
     { label: 'Laboratorio', path: '/lab', icon: <IconLab />, roles: [UserRole.LAB_TECH, UserRole.SUPER_ADMIN, UserRole.DOCTOR] },
     { label: 'Farmacia', path: '/pharmacy', icon: <IconTelemed />, roles: [UserRole.PHARMACIST, UserRole.SUPER_ADMIN] },
     { label: 'Portal Paciente', path: '/patient', icon: <IconDashboard />, roles: [UserRole.PATIENT, UserRole.SUPER_ADMIN] },
     { label: 'Auditoría', path: '/', icon: <IconAudit />, roles: [UserRole.SUPER_ADMIN] },
+    { 
+      label: 'Conoce a SACS', 
+      path: '/about', 
+      icon: <IconPresentation />, 
+      roles: [
+        UserRole.SUPER_ADMIN, 
+        UserRole.CENTER_ADMIN, 
+        UserRole.DOCTOR, 
+        UserRole.STAFF, 
+        UserRole.PATIENT, 
+        UserRole.LAB_TECH, 
+        UserRole.PHARMACIST
+      ] 
+    },
   ];
 
   const isActive = (path: string) => {

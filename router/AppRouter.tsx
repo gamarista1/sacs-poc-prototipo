@@ -9,6 +9,7 @@ import LabDashboard from '../modules/lab/LabDashboard';
 import PharmacyDashboard from '../modules/pharmacy/PharmacyDashboard';
 import PatientPortal from '../modules/patient/PatientPortal';
 import TeleconsultationPage from '../modules/telemedicine/TeleconsultationPage';
+import AboutSacs from '../modules/marketing/AboutSacs';
 import Layout from '../components/Layout';
 import { UserRole } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -111,6 +112,13 @@ const AppRouter: React.FC = () => {
           <Routes>
             <Route index element={<PatientPortal />} />
           </Routes>
+        </DashboardWrapper>
+      } />
+
+      {/* Nueva Ruta: Conoce a SACS */}
+      <Route path="/about" element={
+        <DashboardWrapper>
+          <AboutSacs />
         </DashboardWrapper>
       } />
 

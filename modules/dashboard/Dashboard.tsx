@@ -43,9 +43,66 @@ const Dashboard: React.FC = () => {
         <StatCard title="Interacción API" value="19k" icon={<IconLab />} trend="45%" />
       </div>
 
+      {/* Canva Corporate Presentation Embed */}
+      <div className="bg-white p-8 rounded-[2.5rem] shadow-soft border border-slate-200 overflow-hidden relative group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-mint-400/5 rounded-bl-[100px] -mr-10 -mt-10 group-hover:scale-110 transition-transform"></div>
+        
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="w-10 h-10 bg-sacs-50 rounded-xl flex items-center justify-center text-sacs-500">
+             <span className="text-lg">📽️</span>
+          </div>
+          <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">Presentación Corporativa: SACS Telemedicina</h2>
+        </div>
+        
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: 0,
+            paddingTop: '55.8342%',
+            paddingBottom: 0,
+            boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)',
+            overflow: 'hidden',
+            borderRadius: '2rem',
+            willChange: 'transform',
+          }}
+          className="border border-slate-100"
+        >
+          <iframe
+            loading="lazy"
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              top: 0,
+              left: 0,
+              border: 'none',
+              padding: 0,
+              margin: 0,
+            }}
+            src="https://www.canva.com/design/DAG_u4Ytaz4/cyG4DmrHltvdeRj8_zXDyw/view?embed"
+            allowFullScreen
+            title="SACS Telemedicina Presentation"
+          ></iframe>
+        </div>
+        
+        <div className="mt-6 flex justify-between items-center px-2">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Diseño Estratégico por Gustavo Amarista</p>
+          <a 
+            href="https://www.canva.com/design/DAG_u4Ytaz4/cyG4DmrHltvdeRj8_zXDyw/view?utm_content=DAG_u4Ytaz4&utm_campaign=designshare&utm_medium=embeds&utm_source=link" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-[10px] font-black text-sacs-500 hover:text-sacs-600 uppercase tracking-widest flex items-center transition-colors"
+          >
+            <span>Ver presentación original</span>
+            <span className="ml-2">↗</span>
+          </a>
+        </div>
+      </div>
+
       {/* Content Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Tabla existente... */}
+        {/* Tabla Próximas Consultas */}
         <div className="lg:col-span-8 bg-white rounded-2xl shadow-soft border border-slate-200 overflow-hidden">
           <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
             <h3 className="font-bold text-lg text-slate-800">Próximas Consultas</h3>
@@ -97,7 +154,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Panel Interoperabilidad existente... */}
+        {/* Panel Interoperabilidad */}
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-white p-8 rounded-2xl shadow-soft border border-slate-200">
             <h3 className="font-bold text-lg text-slate-800 mb-6 flex items-center">
