@@ -3,11 +3,11 @@ import { UserRole, AppointmentStatus, LabOrderStatus, PrescriptionStatus } from 
 
 export const SEED_DATA = {
   users: [
-    { id: 'u1', email: 'admin@sacs.com', password: 'Sacs.Admin2025', full_name: 'Admin General', role: UserRole.SUPER_ADMIN, center_id: 'c1' },
-    { id: 'u2', email: 'doctor@sacs.com', password: 'Sacs.Doctor2025', full_name: 'Dr. Roberto Meza', role: UserRole.DOCTOR, center_id: 'c1' },
-    { id: 'u3', email: 'lab@sacs.com', password: 'Sacs.Lab2025', full_name: 'Lic. Elena Solís', role: UserRole.LAB_TECH, center_id: 'c1' },
-    { id: 'u4', email: 'pharma@sacs.com', password: 'Sacs.Pharma2025', full_name: 'Farm. Carlos Dávila', role: UserRole.PHARMACIST, center_id: 'c1' },
-    { id: 'u5', email: 'patient@sacs.com', password: 'Sacs.Patient2025', full_name: 'Juan Pérez', role: UserRole.PATIENT, center_id: 'c1' },
+    { id: 'u1', email: 'admin@sacs.com', password: 'SACS.Admin.V3!!', full_name: 'Admin General', role: UserRole.SUPER_ADMIN, center_id: 'c1' },
+    { id: 'u2', email: 'doctor@sacs.com', password: 'SACS.Doctor.V3!!', full_name: 'Dr. Roberto Meza', role: UserRole.DOCTOR, center_id: 'c1' },
+    { id: 'u3', email: 'lab@sacs.com', password: 'SACS.Lab.V3!!', full_name: 'Lic. Elena Solís', role: UserRole.LAB_TECH, center_id: 'c1' },
+    { id: 'u4', email: 'pharma@sacs.com', password: 'SACS.Pharma.V3!!', full_name: 'Farm. Carlos Dávila', role: UserRole.PHARMACIST, center_id: 'c1' },
+    { id: 'u5', email: 'patient@sacs.com', password: 'SACS.Patient.V3!!', full_name: 'Juan Pérez', role: UserRole.PATIENT, center_id: 'c1' },
   ],
   patients: [
     { id: 'p1', center_id: 'c1', document_id: '0801-1990-12345', first_name: 'Juan', last_name: 'Pérez', birth_date: '1990-05-15', gender: 'masculino', source_system: 'SACS-LOCAL' },
@@ -37,17 +37,6 @@ export const SEED_DATA = {
       reason: 'Revisión de laboratorio',
       proposedDate: new Date(Date.now() + 86400000).toISOString(),
       doctorNotes: 'Tengo espacio mañana a esta hora'
-    },
-    { 
-      id: 'emg1', 
-      patient_id: 'p1', 
-      doctor_id: 'u2', 
-      center_id: 'c1', 
-      date: new Date().toISOString(), 
-      status: AppointmentStatus.WAITING_FOR_TRIAGE, 
-      type: 'EMERGENCY', 
-      reason: 'Dolor torácico agudo',
-      patientNotes: 'Dificultad para respirar desde hace 10 minutos'
     },
   ],
   inventory: [
