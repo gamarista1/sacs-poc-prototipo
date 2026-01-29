@@ -1,0 +1,8 @@
+{
+  "name": "POC of SACS Telemedicina",
+  "description": "Plataforma de Interoperabilidad Clínica y Telemedicina (API-First, Multi-tenant, HL7 FHIR ready)",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
