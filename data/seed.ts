@@ -15,6 +15,8 @@ export const SEED_DATA = {
   ],
   appointments: [
     { id: 'a1', patient_id: 'p1', doctor_id: 'u2', center_id: 'c1', date: new Date().toISOString(), status: AppointmentStatus.PENDING, type: 'VIRTUAL', reason: 'Control Hipertensión' },
+    { id: 'req1', patient_id: 'p1', doctor_id: 'u2', center_id: 'c1', date: null, status: AppointmentStatus.REQUESTED, type: 'TELEMEDICINE', reason: 'Fiebre persistente y malestar' },
+    { id: 'req2', patient_id: 'p2', doctor_id: 'u2', center_id: 'c1', date: null, status: AppointmentStatus.REQUESTED, type: 'TELEMEDICINE', reason: 'Renovación de tratamiento crónico' },
   ],
   inventory: [
     { id: 'm1', name: 'Amoxicilina 500mg', stock: 100 },

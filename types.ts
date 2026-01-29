@@ -10,6 +10,7 @@ export enum UserRole {
 }
 
 export enum AppointmentStatus {
+  REQUESTED = 'REQUESTED',
   PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -57,9 +58,9 @@ export interface Appointment {
   patient_id: string;
   doctor_id: string;
   center_id: string;
-  date: string;
+  date?: string | null;
   status: AppointmentStatus;
-  type: 'VIRTUAL' | 'PHYSICAL';
+  type: 'VIRTUAL' | 'PHYSICAL' | 'TELEMEDICINE';
   reason: string;
   teleconsultationId?: string; // Vinculación con sesión de video
 }
