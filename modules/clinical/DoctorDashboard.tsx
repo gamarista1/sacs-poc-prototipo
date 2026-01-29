@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PatientAgenda from './PatientAgenda';
 import SoapForm from './SoapForm';
 import PrescriptionModal from './PrescriptionModal';
@@ -9,10 +10,12 @@ import { clinicalService } from '../../services/clinical.service';
 import { Appointment, Patient } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { Video } from 'lucide-react';
 
 const DoctorDashboard: React.FC = () => {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState<(Appointment & { patient: Patient })[]>([]);
   const [selectedAptId, setSelectedAptId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,6 +65,12 @@ const DoctorDashboard: React.FC = () => {
     }
   };
 
+  const handleStartTelemed = () => {
+    if (selectedAppointment) {
+      navigate(`/teleconsultation/${selectedAppointment.id}`);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[calc(100vh-140px)]">
       {/* Columna Izquierda: Agenda */}
@@ -77,7 +86,28 @@ const DoctorDashboard: React.FC = () => {
       {/* Columna Derecha: Consulta Activa */}
       <div className="lg:col-span-9 h-full overflow-y-auto custom-scrollbar">
         {selectedAppointment ? (
-          <>
+          <div className="space-y-6 pb-10">
+            {/* Quick Action Bar para Telemedicina si aplica */}
+            {selectedAppointment.type === 'VIRTUAL' && (
+              <div className="bg-gradient-to-r from-sacs-900 to-sacs-600 p-6 rounded-[2rem] text-white flex justify-between items-center shadow-clinical animate-in slide-in-from-top-4 duration-500">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
+                    <Video size={24} className="text-mint-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black uppercase tracking-widest">Cita Virtual Programada</h4>
+                    <p className="text-[10px] text-white/60 font-medium uppercase tracking-tighter">Handshake HL7-SECURE listo para iniciar</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={handleStartTelemed}
+                  className="bg-mint-400 text-sacs-900 px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-mint-400/20"
+                >
+                  Iniciar Teleconsulta
+                </button>
+              </div>
+            )}
+
             <SoapForm 
               patient={selectedAppointment.patient} 
               appointment={selectedAppointment}
@@ -100,7 +130,7 @@ const DoctorDashboard: React.FC = () => {
               doctorId={user?.id || ''}
               centerId={selectedAppointment.center_id}
             />
-          </>
+          </div>
         ) : (
           <div className="h-full flex flex-col items-center justify-center bg-white rounded-[2.5rem] border-2 border-dashed border-slate-200 p-12 text-center">
             <div className="w-20 h-20 bg-sacs-50 rounded-full flex items-center justify-center text-3xl mb-6 grayscale opacity-50">

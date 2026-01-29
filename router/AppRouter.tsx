@@ -8,6 +8,7 @@ import DoctorDashboard from '../modules/clinical/DoctorDashboard';
 import LabDashboard from '../modules/lab/LabDashboard';
 import PharmacyDashboard from '../modules/pharmacy/PharmacyDashboard';
 import PatientPortal from '../modules/patient/PatientPortal';
+import TeleconsultationPage from '../modules/telemedicine/TeleconsultationPage';
 import Layout from '../components/Layout';
 import { UserRole } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -76,6 +77,13 @@ const AppRouter: React.FC = () => {
             <Route index element={<DoctorDashboard />} />
             <Route path="analytics" element={<Dashboard />} />
           </Routes>
+        </DashboardWrapper>
+      } />
+
+      {/* Ruta de Teleconsulta (Fuera del layout estándar para maximizar espacio) */}
+      <Route path="/teleconsultation/:appointmentId" element={
+        <DashboardWrapper allowedRoles={[UserRole.DOCTOR, UserRole.SUPER_ADMIN, UserRole.CENTER_ADMIN]}>
+          <TeleconsultationPage />
         </DashboardWrapper>
       } />
 
