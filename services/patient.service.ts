@@ -22,10 +22,6 @@ export const patientService = {
     return patientId ? appointments.filter(a => a.patient_id === patientId) : appointments;
   },
 
-  /**
-   * Permite a un paciente solicitar una teleconsulta.
-   * La cita se crea en estado REQUESTED y sin fecha.
-   */
   async requestTeleconsultation(patientId: string, reason: string): Promise<Appointment> {
     const appointments = await this.getAppointments();
     const patients = await this.getAll();
@@ -36,7 +32,7 @@ export const patientService = {
     const newRequest: Appointment = {
       id: crypto.randomUUID(),
       patient_id: patientId,
-      doctor_id: 'u2', // Asignado a Dr. Roberto Meza por defecto para el prototipo
+      doctor_id: 'u2',
       center_id: patient.center_id,
       status: AppointmentStatus.REQUESTED,
       type: 'TELEMEDICINE',
@@ -46,5 +42,79 @@ export const patientService = {
 
     await storage.set('sacs_appointments', [...appointments, newRequest]);
     return newRequest;
+  },
+
+  async requestRoutineAppointment(patientId: string, desiredDate: string, reason: string): Promise<Appointment> {
+    const appointments = await this.getAppointments();
+    const patients = await this.getAll();
+    const patient = patients.find(p => p.id === patientId);
+
+    if (!patient) throw new Error("Paciente no encontrado");
+
+    const newRequest: Appointment = {
+      id: crypto.randomUUID(),
+      patient_id: patientId,
+      doctor_id: 'u2',
+      center_id: patient.center_id,
+      status: AppointmentStatus.REQUESTED_BY_PATIENT,
+      type: 'ROUTINE',
+      reason,
+      patientNotes: reason,
+      date: desiredDate
+    };
+
+    await storage.set('sacs_appointments', [...appointments, newRequest]);
+    return newRequest;
+  },
+
+  async requestEmergency(patientId: string, reason: string): Promise<Appointment> {
+    const appointments = await this.getAppointments();
+    const patients = await this.getAll();
+    const patient = patients.find(p => p.id === patientId);
+
+    if (!patient) throw new Error("Paciente no encontrado");
+
+    const newEmergency: Appointment = {
+      id: crypto.randomUUID(),
+      patient_id: patientId,
+      doctor_id: 'u2',
+      center_id: patient.center_id,
+      status: AppointmentStatus.WAITING_FOR_TRIAGE,
+      type: 'EMERGENCY',
+      reason,
+      patientNotes: reason,
+      date: new Date().toISOString()
+    };
+
+    await storage.set('sacs_appointments', [...appointments, newEmergency]);
+    return newEmergency;
+  },
+
+  async acceptDoctorProposal(appointmentId: string): Promise<Appointment> {
+    const appointments = await this.getAppointments();
+    const index = appointments.findIndex(a => a.id === appointmentId);
+    
+    if (index === -1) throw new Error("Cita no encontrada");
+    const apt = appointments[index];
+
+    if (!apt.proposedDate) throw new Error("No hay una fecha propuesta por el médico");
+
+    appointments[index] = {
+      ...apt,
+      status: AppointmentStatus.CONFIRMED_BY_PATIENT,
+      date: apt.proposedDate,
+      proposedDate: null
+    };
+
+    await storage.set('sacs_appointments', appointments);
+    return appointments[index];
+  },
+
+  async rejectProposal(appointmentId: string): Promise<void> {
+    const appointments = await this.getAppointments();
+    const updated = appointments.map(a => 
+      a.id === appointmentId ? { ...a, status: AppointmentStatus.CANCELLED } : a
+    );
+    await storage.set('sacs_appointments', updated);
   }
 };

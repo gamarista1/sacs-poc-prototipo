@@ -11,6 +11,10 @@ export enum UserRole {
 
 export enum AppointmentStatus {
   REQUESTED = 'REQUESTED',
+  REQUESTED_BY_PATIENT = 'REQUESTED_BY_PATIENT',
+  PROPOSED_BY_DOCTOR = 'PROPOSED_BY_DOCTOR',
+  CONFIRMED_BY_PATIENT = 'CONFIRMED_BY_PATIENT',
+  WAITING_FOR_TRIAGE = 'WAITING_FOR_TRIAGE',
   PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -60,21 +64,23 @@ export interface Appointment {
   center_id: string;
   date?: string | null;
   status: AppointmentStatus;
-  type: 'VIRTUAL' | 'PHYSICAL' | 'TELEMEDICINE';
+  type: 'VIRTUAL' | 'PHYSICAL' | 'TELEMEDICINE' | 'ROUTINE' | 'EMERGENCY';
   reason: string;
-  teleconsultationId?: string; // Vinculación con sesión de video
+  patientNotes?: string;
+  doctorNotes?: string;
+  proposedDate?: string | null;
+  teleconsultationId?: string;
 }
 
-// Estructura SOAP para Notas Clínicas (Standard Médico)
 export interface MedicalRecord {
   id: string;
   appointment_id: string;
   patient_id: string;
   doctor_id: string;
-  subjective: string; // Lo que el paciente refiere
-  objective: string;  // Lo que el médico observa (signos vitales, etc)
-  assessment: string; // Diagnóstico (CIE-10 ready)
-  plan: string;       // Pasos a seguir
+  subjective: string;
+  objective: string;
+  assessment: string;
+  plan: string;
   created_at: string;
 }
 
@@ -89,7 +95,7 @@ export interface Prescription {
     frequency: string;
     duration: string;
   }>;
-  validation_code: string; // UUID/Hash para farmacia
+  validation_code: string;
   status: PrescriptionStatus;
   dispensed_at?: string;
 }

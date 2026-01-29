@@ -34,9 +34,6 @@ export const clinicalService = {
     return newOrder;
   },
 
-  /**
-   * Confirma una solicitud de cita asignándole una fecha y hora.
-   */
   async confirmAppointment(appointmentId: string, scheduledDate: string): Promise<Appointment> {
     const appointments = await storage.get<Appointment[]>('sacs_appointments') || [];
     const index = appointments.findIndex(a => a.id === appointmentId);
@@ -53,11 +50,47 @@ export const clinicalService = {
     return appointments[index];
   },
 
-  /**
-   * Obtiene las solicitudes de teleconsulta pendientes para un centro específico.
-   */
+  async counterProposeAppointment(appointmentId: string, newDate: string): Promise<Appointment> {
+    const appointments = await storage.get<Appointment[]>('sacs_appointments') || [];
+    const index = appointments.findIndex(a => a.id === appointmentId);
+    
+    if (index === -1) throw new Error("Cita no encontrada");
+
+    appointments[index] = {
+      ...appointments[index],
+      status: AppointmentStatus.PROPOSED_BY_DOCTOR,
+      proposedDate: newDate
+    };
+
+    await storage.set('sacs_appointments', appointments);
+    return appointments[index];
+  },
+
   async getPendingRequests(centerId: string): Promise<Appointment[]> {
     const appointments = await storage.get<Appointment[]>('sacs_appointments') || [];
-    return appointments.filter(a => a.center_id === centerId && a.status === AppointmentStatus.REQUESTED);
+    return appointments.filter(a => 
+      a.center_id === centerId && 
+      (a.status === AppointmentStatus.REQUESTED || a.status === AppointmentStatus.REQUESTED_BY_PATIENT)
+    );
+  },
+
+  async getEmergencyQueue(): Promise<Appointment[]> {
+    const appointments = await storage.get<Appointment[]>('sacs_appointments') || [];
+    return appointments.filter(a => a.status === AppointmentStatus.WAITING_FOR_TRIAGE);
+  },
+
+  async attendEmergency(appointmentId: string): Promise<Appointment> {
+    const appointments = await storage.get<Appointment[]>('sacs_appointments') || [];
+    const index = appointments.findIndex(a => a.id === appointmentId);
+    
+    if (index === -1) throw new Error("Emergencia no encontrada");
+
+    appointments[index] = {
+      ...appointments[index],
+      status: AppointmentStatus.IN_PROGRESS
+    };
+
+    await storage.set('sacs_appointments', appointments);
+    return appointments[index];
   }
 };
