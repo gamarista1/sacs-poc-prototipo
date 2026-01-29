@@ -61,6 +61,7 @@ export interface Appointment {
   status: AppointmentStatus;
   type: 'VIRTUAL' | 'PHYSICAL';
   reason: string;
+  teleconsultationId?: string; // Vinculación con sesión de video
 }
 
 // Estructura SOAP para Notas Clínicas (Standard Médico)

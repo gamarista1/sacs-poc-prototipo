@@ -48,14 +48,14 @@ const LoginPage: React.FC = () => {
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-sacs-500/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
 
       <div className="w-full max-w-md relative animate-in fade-in zoom-in duration-500">
-        <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10 p-10 md:p-12">
-          <div className="text-center mb-10">
-            <div className="mb-8 flex justify-center">
+        <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10 pt-1 px-10 pb-10">
+          <div className="text-center mb-4">
+            <div className="mb-0 flex justify-center">
               {!logoFailed ? (
                 <img 
                   src={logoPath} 
                   alt="SACS Telemedicina" 
-                  className="h-16 w-auto object-contain transition-transform hover:scale-105 duration-300"
+                  className="h-[200px] w-auto object-contain mx-auto transition-transform duration-300 ease-out hover:scale-105 hover:-rotate-1 cursor-pointer"
                   onError={handleLogoError}
                 />
               ) : (
@@ -66,11 +66,11 @@ const LoginPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Portal <span className="text-sacs-500">Hub</span></h1>
-            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">Orquestador de Interoperabilidad</p>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight uppercase leading-none mt-[-1.5rem] relative z-10">Portal <span className="text-sacs-500">Hub</span></h1>
+            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5">Orquestador de Interoperabilidad</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-xs font-bold flex items-center space-x-2 animate-shake">
                 <span>⚠️</span>
@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
               </div>
             )}
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Profesional</label>
               <input 
                 type="email" 
@@ -90,7 +90,7 @@ const LoginPage: React.FC = () => {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Contraseña</label>
               <input 
                 type="password" 
@@ -118,7 +118,7 @@ const LoginPage: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-10 pt-8 border-t border-slate-100">
+          <div className="mt-8 pt-6 border-t border-slate-100">
             <p className="text-[10px] text-center font-bold text-slate-400 uppercase tracking-widest leading-loose">
               Uso Restringido a Personal Autorizado.<br/>
               Protegido por Protocolo <span className="text-sacs-500">HL7-FHIR SECURE</span>.

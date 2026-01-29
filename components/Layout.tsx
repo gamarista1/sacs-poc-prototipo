@@ -58,31 +58,25 @@ const Layout: React.FC<LayoutProps> = ({ children, role, userName, centerName })
         lg:relative lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex flex-col h-full">
-          {/* Logo Section con Logo Blanco Oficial */}
-          <div className="p-8 flex flex-col items-start">
-            <div className="mb-4">
-              {!logoFailed ? (
-                <img 
-                  src={logoPath} 
-                  alt="SACS Telemedicina" 
-                  className="h-10 w-auto object-contain"
-                  onError={handleLogoError}
-                />
-              ) : (
-                <div className="h-10 flex items-center space-x-2">
-                  <span className="text-2xl font-black text-white tracking-tighter">SACS</span>
-                  <div className="w-0.5 h-6 bg-mint-400 opacity-50"></div>
-                </div>
-              )}
-            </div>
-            <div>
-              <h1 className="text-sm font-bold tracking-[0.2em] text-white uppercase opacity-90">ORCHESTRATOR</h1>
-              <p className="text-[9px] font-medium text-mint-400 tracking-[0.1em] uppercase opacity-60">Centro de Interoperabilidad</p>
-            </div>
+          {/* Logo Section - Solo Logo Blanco */}
+          <div className="p-8 flex justify-center items-center">
+            {!logoFailed ? (
+              <img 
+                src={logoPath} 
+                alt="SACS Telemedicina" 
+                className="h-28 w-auto object-contain transition-all duration-500 hover:scale-110 hover:brightness-110 hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] cursor-pointer"
+                onError={handleLogoError}
+              />
+            ) : (
+              <div className="h-10 flex items-center space-x-2">
+                <span className="text-2xl font-black text-white tracking-tighter">SACS</span>
+                <div className="w-0.5 h-6 bg-mint-400 opacity-50"></div>
+              </div>
+            )}
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-6 space-y-1.5 mt-4">
+          <nav className="flex-1 px-6 space-y-1.5 mt-2">
             {menuItems.filter(item => item.roles.includes(role)).map((item, idx) => (
               <button
                 key={idx}
