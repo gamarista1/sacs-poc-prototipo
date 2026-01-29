@@ -3,11 +3,11 @@ import { UserRole, AppointmentStatus, LabOrderStatus, PrescriptionStatus } from 
 
 export const SEED_DATA = {
   users: [
-    { id: 'u1', email: 'admin@sacs.com', password: 'admin123', full_name: 'Admin General', role: UserRole.SUPER_ADMIN, center_id: 'c1' },
-    { id: 'u2', email: 'doctor@sacs.com', password: 'doctor123', full_name: 'Dr. Roberto Meza', role: UserRole.DOCTOR, center_id: 'c1' },
-    { id: 'u3', email: 'lab@sacs.com', password: 'lab123', full_name: 'Lic. Elena Solís', role: UserRole.LAB_TECH, center_id: 'c1' },
-    { id: 'u4', email: 'pharma@sacs.com', password: 'pharma123', full_name: 'Farm. Carlos Dávila', role: UserRole.PHARMACIST, center_id: 'c1' },
-    { id: 'u5', email: 'patient@sacs.com', password: 'patient123', full_name: 'Juan Pérez', role: UserRole.PATIENT, center_id: 'c1' },
+    { id: 'u1', email: 'admin@sacs.com', password: 'Sacs.Admin2025', full_name: 'Admin General', role: UserRole.SUPER_ADMIN, center_id: 'c1' },
+    { id: 'u2', email: 'doctor@sacs.com', password: 'Sacs.Doctor2025', full_name: 'Dr. Roberto Meza', role: UserRole.DOCTOR, center_id: 'c1' },
+    { id: 'u3', email: 'lab@sacs.com', password: 'Sacs.Lab2025', full_name: 'Lic. Elena Solís', role: UserRole.LAB_TECH, center_id: 'c1' },
+    { id: 'u4', email: 'pharma@sacs.com', password: 'Sacs.Pharma2025', full_name: 'Farm. Carlos Dávila', role: UserRole.PHARMACIST, center_id: 'c1' },
+    { id: 'u5', email: 'patient@sacs.com', password: 'Sacs.Patient2025', full_name: 'Juan Pérez', role: UserRole.PATIENT, center_id: 'c1' },
   ],
   patients: [
     { id: 'p1', center_id: 'c1', document_id: '0801-1990-12345', first_name: 'Juan', last_name: 'Pérez', birth_date: '1990-05-15', gender: 'masculino', source_system: 'SACS-LOCAL' },

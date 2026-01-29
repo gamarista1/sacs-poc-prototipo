@@ -2,9 +2,13 @@
 import { storage } from '../utils/storage';
 import { Patient, Appointment, MedicalRecord, AppointmentStatus } from '../types';
 
+const PATIENTS_KEY = 'sacs_patients_v2';
+const APPOINTMENTS_KEY = 'sacs_appointments_v2';
+const RECORDS_KEY = 'sacs_medical_records_v2';
+
 export const patientService = {
   async getAll(): Promise<Patient[]> {
-    return await storage.get<Patient[]>('sacs_patients') || [];
+    return await storage.get<Patient[]>(PATIENTS_KEY) || [];
   },
 
   async getById(id: string): Promise<Patient | undefined> {
@@ -13,12 +17,12 @@ export const patientService = {
   },
 
   async getHistory(patientId: string): Promise<MedicalRecord[]> {
-    const records = await storage.get<MedicalRecord[]>('sacs_medical_records') || [];
+    const records = await storage.get<MedicalRecord[]>(RECORDS_KEY) || [];
     return records.filter(r => r.patient_id === patientId);
   },
 
   async getAppointments(patientId?: string): Promise<Appointment[]> {
-    const appointments = await storage.get<Appointment[]>('sacs_appointments') || [];
+    const appointments = await storage.get<Appointment[]>(APPOINTMENTS_KEY) || [];
     return patientId ? appointments.filter(a => a.patient_id === patientId) : appointments;
   },
 
@@ -40,7 +44,7 @@ export const patientService = {
       date: null
     };
 
-    await storage.set('sacs_appointments', [...appointments, newRequest]);
+    await storage.set(APPOINTMENTS_KEY, [...appointments, newRequest]);
     return newRequest;
   },
 
@@ -63,7 +67,7 @@ export const patientService = {
       date: desiredDate
     };
 
-    await storage.set('sacs_appointments', [...appointments, newRequest]);
+    await storage.set(APPOINTMENTS_KEY, [...appointments, newRequest]);
     return newRequest;
   },
 
@@ -86,7 +90,7 @@ export const patientService = {
       date: new Date().toISOString()
     };
 
-    await storage.set('sacs_appointments', [...appointments, newEmergency]);
+    await storage.set(APPOINTMENTS_KEY, [...appointments, newEmergency]);
     return newEmergency;
   },
 
@@ -106,7 +110,7 @@ export const patientService = {
       proposedDate: null
     };
 
-    await storage.set('sacs_appointments', appointments);
+    await storage.set(APPOINTMENTS_KEY, appointments);
     return appointments[index];
   },
 
@@ -115,6 +119,6 @@ export const patientService = {
     const updated = appointments.map(a => 
       a.id === appointmentId ? { ...a, status: AppointmentStatus.CANCELLED } : a
     );
-    await storage.set('sacs_appointments', updated);
+    await storage.set(APPOINTMENTS_KEY, updated);
   }
 };
