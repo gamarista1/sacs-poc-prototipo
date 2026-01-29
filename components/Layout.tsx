@@ -18,6 +18,9 @@ const Layout: React.FC<LayoutProps> = ({ children, role, userName, centerName })
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Usamos ruta estática para compatibilidad máxima
+  const logoBlanco = './media/logo-sacs-blanco.svg';
+
   const handleLogout = async () => {
     await logout();
     navigate('/login');
@@ -32,7 +35,6 @@ const Layout: React.FC<LayoutProps> = ({ children, role, userName, centerName })
     { label: 'Auditoría', path: '/', icon: <IconAudit />, roles: [UserRole.SUPER_ADMIN] },
   ];
 
-  // Detectar si el item es el activo
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true;
     if (path !== '/' && location.pathname.startsWith(path)) return true;
@@ -47,16 +49,15 @@ const Layout: React.FC<LayoutProps> = ({ children, role, userName, centerName })
         lg:relative lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex flex-col h-full">
-          {/* Logo Section con Logo Oficial */}
+          {/* Logo Section con Logo Blanco Oficial */}
           <div className="p-8 flex flex-col items-start">
             <div className="mb-4">
               <img 
-                src="https://raw.githubusercontent.com/aj-asistente/assets/main/sacs-logo-white.png" 
+                src={logoBlanco} 
                 alt="SACS Telemedicina" 
-                className="h-12 w-auto object-contain brightness-0 invert"
+                className="h-10 w-auto object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement!.innerHTML = '<div class="w-10 h-10 bg-gradient-to-br from-mint-400 to-sacs-500 rounded-xl flex items-center justify-center shadow-lg shadow-mint-500/20 rotate-3 transition-transform hover:rotate-0"><span class="text-sacs-900 font-black text-xl">S</span></div>';
                 }}
               />
             </div>

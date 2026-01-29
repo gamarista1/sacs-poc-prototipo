@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { UserRole } from '../../types';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +10,9 @@ const LoginPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // Usamos la ruta directa para evitar problemas de resolución de módulos con SVGs en entornos sin bundler estricto
+  const logoVerde = './media/logo-sacs-verde.svg';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,12 +40,12 @@ const LoginPage: React.FC = () => {
           <div className="text-center mb-10">
             <div className="mb-8 flex justify-center">
               <img 
-                src="https://raw.githubusercontent.com/aj-asistente/assets/main/sacs-logo.png" 
+                src={logoVerde} 
                 alt="SACS Telemedicina" 
-                className="h-20 w-auto object-contain transition-transform hover:scale-105 duration-300"
+                className="h-16 w-auto object-contain transition-transform hover:scale-105 duration-300"
                 onError={(e) => {
+                  // Fallback simple si la imagen falla
                   e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement!.innerHTML = '<div class="w-16 h-16 bg-gradient-to-br from-mint-400 to-sacs-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-mint-500/20 rotate-3 mb-6"><span class="text-sacs-900 font-black text-3xl">S</span></div>';
                 }}
               />
             </div>
