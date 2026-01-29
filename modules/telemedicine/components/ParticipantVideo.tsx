@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import ReactPlayer from 'https://esm.sh/react-player@2.16.0';
+import ReactPlayer from 'react-player';
 
 interface ParticipantVideoProps {
   url?: string;

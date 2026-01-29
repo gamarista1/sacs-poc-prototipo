@@ -28,15 +28,19 @@ const TeleconsultationPage: React.FC = () => {
   const [showLabModal, setShowLabModal] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadData = async () => {
       if (!appointmentId) return;
       try {
         const apts = await patientService.getAppointments();
+        if (!isMounted) return;
+
         const apt = apts.find(a => a.id === appointmentId);
-        
         if (!apt) throw new Error("Cita no encontrada");
         
         const pat = await patientService.getById(apt.patient_id);
+        if (!isMounted) return;
         if (!pat) throw new Error("Paciente no encontrado");
 
         setAppointment(apt);
@@ -45,15 +49,21 @@ const TeleconsultationPage: React.FC = () => {
         // Inicializar sesión en el backend simulado
         await teleconsultationService.initializeSession(apt.id, apt.doctor_id, apt.patient_id);
       } catch (error: any) {
-        showToast(error.message, "error");
-        navigate('/doctor');
+        if (isMounted) {
+          showToast(error.message, "error");
+          navigate('/doctor');
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
 
     loadData();
-  }, [appointmentId]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [appointmentId, navigate, showToast]);
 
   const handleSaveSOAP = async (soapData: any) => {
     if (!appointment || !user) return;

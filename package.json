@@ -13,7 +13,9 @@
     "react-dom": "^19.2.3",
     "@supabase/supabase-js": "^2.90.1",
     "lucide-react": "0.460.0",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.13.0",
+    "react-webcam": "7.2.0",
+    "react-player": "2.16.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

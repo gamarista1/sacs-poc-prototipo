@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import Webcam from 'https://esm.sh/react-webcam@7.2.0';
+import Webcam from 'react-webcam';
 import ParticipantVideo from './ParticipantVideo';
 import VideoControls from './VideoControls';
 import { MediaState } from '../../../types/telemedicina';
