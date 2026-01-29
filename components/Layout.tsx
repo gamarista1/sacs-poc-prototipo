@@ -14,16 +14,25 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, role, userName, centerName }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Usamos ruta estática para compatibilidad máxima
-  const logoBlanco = './media/logo-sacs-blanco.svg';
+  const logoPath = 'media/logo-sacs-blanco.svg';
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
+  };
+
+  const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.currentTarget;
+    if (target.src.includes('media/') && !target.src.startsWith(window.location.origin + '/')) {
+      target.src = '/media/logo-sacs-blanco.svg';
+    } else {
+      setLogoFailed(true);
+    }
   };
 
   const menuItems = [
@@ -52,14 +61,19 @@ const Layout: React.FC<LayoutProps> = ({ children, role, userName, centerName })
           {/* Logo Section con Logo Blanco Oficial */}
           <div className="p-8 flex flex-col items-start">
             <div className="mb-4">
-              <img 
-                src={logoBlanco} 
-                alt="SACS Telemedicina" 
-                className="h-10 w-auto object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
+              {!logoFailed ? (
+                <img 
+                  src={logoPath} 
+                  alt="SACS Telemedicina" 
+                  className="h-10 w-auto object-contain"
+                  onError={handleLogoError}
+                />
+              ) : (
+                <div className="h-10 flex items-center space-x-2">
+                  <span className="text-2xl font-black text-white tracking-tighter">SACS</span>
+                  <div className="w-0.5 h-6 bg-mint-400 opacity-50"></div>
+                </div>
+              )}
             </div>
             <div>
               <h1 className="text-sm font-bold tracking-[0.2em] text-white uppercase opacity-90">ORCHESTRATOR</h1>

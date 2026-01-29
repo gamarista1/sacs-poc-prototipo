@@ -8,11 +8,12 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Usamos la ruta directa para evitar problemas de resolución de módulos con SVGs en entornos sin bundler estricto
-  const logoVerde = './media/logo-sacs-verde.svg';
+  // Try standard relative path
+  const logoPath = 'media/logo-sacs-verde.svg';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +30,17 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.currentTarget;
+    // Attempt one fallback to absolute path if relative failed
+    if (target.src.includes('media/') && !target.src.startsWith(window.location.origin + '/')) {
+      target.src = '/media/logo-sacs-verde.svg';
+    } else {
+      // If absolute also fails, show text fallback
+      setLogoFailed(true);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-sacs-900 flex items-center justify-center p-6 relative overflow-hidden">
       {/* Decoración de fondo */}
@@ -39,15 +51,20 @@ const LoginPage: React.FC = () => {
         <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10 p-10 md:p-12">
           <div className="text-center mb-10">
             <div className="mb-8 flex justify-center">
-              <img 
-                src={logoVerde} 
-                alt="SACS Telemedicina" 
-                className="h-16 w-auto object-contain transition-transform hover:scale-105 duration-300"
-                onError={(e) => {
-                  // Fallback simple si la imagen falla
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
+              {!logoFailed ? (
+                <img 
+                  src={logoPath} 
+                  alt="SACS Telemedicina" 
+                  className="h-16 w-auto object-contain transition-transform hover:scale-105 duration-300"
+                  onError={handleLogoError}
+                />
+              ) : (
+                <div className="h-16 flex items-center justify-center space-x-2">
+                  <span className="text-4xl font-black text-sacs-500 tracking-tighter">SACS</span>
+                  <div className="w-1 h-8 bg-mint-400"></div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left leading-none">Tele<br/>medicina</span>
+                </div>
+              )}
             </div>
             <h1 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Portal <span className="text-sacs-500">Hub</span></h1>
             <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">Orquestador de Interoperabilidad</p>
