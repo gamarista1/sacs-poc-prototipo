@@ -80,9 +80,9 @@ const AppRouter: React.FC = () => {
         </DashboardWrapper>
       } />
 
-      {/* Ruta de Teleconsulta (Fuera del layout estándar para maximizar espacio) */}
+      {/* Ruta de Teleconsulta (Ahora también permitida para pacientes) */}
       <Route path="/teleconsultation/:appointmentId" element={
-        <DashboardWrapper allowedRoles={[UserRole.DOCTOR, UserRole.SUPER_ADMIN, UserRole.CENTER_ADMIN]}>
+        <DashboardWrapper allowedRoles={[UserRole.DOCTOR, UserRole.SUPER_ADMIN, UserRole.CENTER_ADMIN, UserRole.PATIENT]}>
           <TeleconsultationPage />
         </DashboardWrapper>
       } />

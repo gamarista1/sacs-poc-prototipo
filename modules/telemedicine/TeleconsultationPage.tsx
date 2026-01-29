@@ -8,7 +8,7 @@ import LabOrderModal from '../clinical/LabOrderModal';
 import { patientService } from '../../services/patient.service';
 import { clinicalService } from '../../services/clinical.service';
 import { teleconsultationService } from '../../services/teleconsultation.service';
-import { Appointment, Patient } from '../../types';
+import { Appointment, Patient, UserRole } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { ChevronLeft, ShieldCheck, Activity } from 'lucide-react';
@@ -51,7 +51,7 @@ const TeleconsultationPage: React.FC = () => {
       } catch (error: any) {
         if (isMounted) {
           showToast(error.message, "error");
-          navigate('/doctor');
+          navigate(user?.role === UserRole.PATIENT ? '/patient' : '/doctor');
         }
       } finally {
         if (isMounted) setIsLoading(false);
@@ -63,7 +63,7 @@ const TeleconsultationPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [appointmentId, navigate, showToast]);
+  }, [appointmentId, navigate, showToast, user]);
 
   const handleSaveSOAP = async (soapData: any) => {
     if (!appointment || !user) return;
@@ -74,7 +74,6 @@ const TeleconsultationPage: React.FC = () => {
         doctor_id: user.id,
         ...soapData
       });
-      // Al guardar la nota en este flujo, también finalizamos la sesión
       await teleconsultationService.endSession(appointment.teleconsultationId || appointment.id);
       showToast("Consulta finalizada y registrada correctamente", "success");
       navigate('/doctor');
@@ -84,8 +83,13 @@ const TeleconsultationPage: React.FC = () => {
   };
 
   const handleEndCall = () => {
-    if (window.confirm("¿Desea finalizar la videollamada? Asegúrese de guardar sus notas clínicas antes de salir.")) {
-      navigate('/doctor');
+    const isDoctor = user?.role !== UserRole.PATIENT;
+    const msg = isDoctor 
+      ? "¿Desea finalizar la videollamada? Asegúrese de guardar sus notas clínicas antes de salir." 
+      : "¿Desea salir de la videollamada?";
+
+    if (window.confirm(msg)) {
+      navigate(isDoctor ? '/doctor' : '/patient');
     }
   };
 
@@ -98,75 +102,86 @@ const TeleconsultationPage: React.FC = () => {
     );
   }
 
+  const isDoctor = user?.role === UserRole.DOCTOR || user?.role === UserRole.SUPER_ADMIN || user?.role === UserRole.CENTER_ADMIN;
+
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] space-y-6 animate-in fade-in duration-700">
       {/* Header de la Sala */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center space-x-4">
           <button 
-            onClick={() => navigate('/doctor')}
+            onClick={() => navigate(isDoctor ? '/doctor' : '/patient')}
             className="p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-colors"
           >
             <ChevronLeft size={24} />
           </button>
           <div>
             <div className="flex items-center space-x-2">
-              <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Sala de Teleconsulta</h1>
-              <span className="px-2 py-0.5 bg-mint-400/20 text-sacs-600 text-[10px] font-black rounded-md uppercase tracking-widest border border-mint-400/30">Activa</span>
+              <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight">
+                {isDoctor ? "Sala de Teleconsulta" : "Consulta Virtual con Especialista"}
+              </h1>
+              <span className="px-2 py-0.5 bg-mint-400/20 text-sacs-600 text-[10px] font-black rounded-md uppercase tracking-widest border border-mint-400/30">En Vivo</span>
             </div>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">ID Encuentro: {appointment.id.split('-')[0]}</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+              {isDoctor ? `Paciente: ${patient.first_name} ${patient.last_name}` : `Especialista: Dr. Roberto Meza`}
+            </p>
           </div>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
            <div className="flex items-center space-x-2 text-green-500 bg-green-50 px-4 py-2 rounded-xl border border-green-100">
               <ShieldCheck size={16} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Encriptación de Punto a Punto Habilitada</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">HL7-SECURE ACTIVE</span>
            </div>
            <div className="flex items-center space-x-2 text-sacs-500">
               <Activity size={16} className="animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Streaming: 1080p HL7-v4</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Banda: 1080p Crystal Clear</span>
            </div>
         </div>
       </div>
 
-      {/* Main Split View Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 flex-1 min-h-0">
-        {/* Columna Video (40%) */}
-        <div className="lg:col-span-4 h-full">
+      {/* Main Split View Grid o Full View para Paciente */}
+      <div className={`grid grid-cols-1 ${isDoctor ? 'lg:grid-cols-10 gap-8' : ''} flex-1 min-h-0`}>
+        {/* Columna Video (40% si doctor, 100% si paciente) */}
+        <div className={`${isDoctor ? 'lg:col-span-4' : 'lg:col-span-10'} h-full`}>
            <TeleconsultationRoom 
             patient={patient}
             onEndSession={handleEndCall}
            />
         </div>
 
-        {/* Columna Historia Clínica (60%) */}
-        <div className="lg:col-span-6 h-full overflow-y-auto custom-scrollbar pr-2 pb-10">
-           <SoapForm 
-              patient={patient}
-              appointment={appointment}
-              onSave={handleSaveSOAP}
-              onPrescription={() => setShowPrescModal(true)}
-              onLabOrder={() => setShowLabModal(true)}
-           />
-        </div>
+        {/* Columna Historia Clínica (Solo Doctores - 60%) */}
+        {isDoctor && (
+          <div className="lg:col-span-6 h-full overflow-y-auto custom-scrollbar pr-2 pb-10">
+             <SoapForm 
+                patient={patient}
+                appointment={appointment}
+                onSave={handleSaveSOAP}
+                onPrescription={() => setShowPrescModal(true)}
+                onLabOrder={() => setShowLabModal(true)}
+             />
+          </div>
+        )}
       </div>
 
-      {/* Modales Complementarios */}
-      <PrescriptionModal 
-        isOpen={showPrescModal}
-        onClose={() => setShowPrescModal(false)}
-        patientId={patient.id}
-        doctorId={user?.id || ''}
-      />
-
-      <LabOrderModal 
-        isOpen={showLabModal}
-        onClose={() => setShowLabModal(false)}
-        patientId={patient.id}
-        doctorId={user?.id || ''}
-        centerId={appointment.center_id}
-      />
+      {/* Modales Complementarios (Solo Doctores) */}
+      {isDoctor && (
+        <>
+          <PrescriptionModal 
+            isOpen={showPrescModal}
+            onClose={() => setShowPrescModal(false)}
+            patientId={patient.id}
+            doctorId={user?.id || ''}
+          />
+          <LabOrderModal 
+            isOpen={showLabModal}
+            onClose={() => setShowLabModal(false)}
+            patientId={patient.id}
+            doctorId={user?.id || ''}
+            centerId={appointment.center_id}
+          />
+        </>
+      )}
     </div>
   );
 };
